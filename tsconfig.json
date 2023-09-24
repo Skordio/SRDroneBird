@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"strict": true,
+		"jsx": "preserve",
+		"importHelpers": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"baseUrl": ".",
+		"composite": true,
+		"types": ["node", "vuetify"],
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"lib": ["es2015", "DOM", "dom.iterable", "scripthost"],
+		"ignoreDeprecations": "5.0"
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"src/**/*.vue",
+		"tests/**/*.ts",
+		"tests/**/*.tsx",
+		"env.d.ts",
+		"src/**/*",
+		"src/**/*.vue"
+	],
+	"exclude": ["node_modules", "src/**/__tests__/*"],
+	"extends": "@vue/tsconfig/tsconfig.web.json"
+}
