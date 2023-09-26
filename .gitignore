@@ -1,7 +1,5 @@
 node_modules
 
-**/assets.zip
-
 src/assets
 
-src/sr_dronebird_assets.zip
+sr_dronebird_assets.zip
