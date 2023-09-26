@@ -2,6 +2,14 @@ import GalleryPage from "@/pages/gallery"
 import type { RouteConfig } from "@/types"
 import { GALLERY } from "@/route/names"
 
+const videos = [
+	'golf_cart_1',
+	'golf_course_1',
+	'lake_1',
+	'proving_grounds_1',
+	'state_park_1'
+]
+
 const gallery_routes: Array<RouteConfig> = [
 	{
 		path: "/gallery",

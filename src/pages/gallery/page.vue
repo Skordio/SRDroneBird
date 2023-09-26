@@ -14,31 +14,31 @@
                     <v-btn :to="{ name: GALLERY.LAKE }" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
                         <div class="d-flex flex-column">
                             <p>Lake</p>
-                            <v-img :src="getThumbnailPngSrc('lake.png')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <v-img :src="getThumbnailPngSrc('lake_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
                         </div>
                     </v-btn>
                     <v-btn :to="{ name: GALLERY.GOLF_CART_TOUR }" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
                         <div class="d-flex flex-column">
                             <p>Golf Cart Tour</p>
-                            <v-img :src="getThumbnailPngSrc('golf_cart.png')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <v-img :src="getThumbnailPngSrc('golf_cart_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
                         </div>
                     </v-btn>
                     <v-btn :to="{ name: GALLERY.GOLF_COURSE }" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
                         <div class="d-flex flex-column">
                             <p>Golf Course</p>
-                            <v-img :src="getThumbnailPngSrc('golf_course.png')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <v-img :src="getThumbnailPngSrc('golf_course_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
                         </div>
                     </v-btn>
                     <v-btn :to="{ name: GALLERY.PROVING_GROUNDS }" color="#FFFFF" :height="btnHeight" class="video-card"  variant="outlined">
                         <div class="d-flex flex-column">
                             <p>Proving Grounds</p>
-                            <v-img :src="getThumbnailPngSrc('proving_grounds.png')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <v-img :src="getThumbnailPngSrc('proving_grounds_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
                         </div>
                     </v-btn>
                     <v-btn :to="{ name: GALLERY.STATE_PARK }" color="#FFFFF" :height="btnHeight" class="video-card"  variant="outlined">
                         <div class="d-flex flex-column">
                             <p>State Park</p>
-                            <v-img :src="getThumbnailPngSrc('state_park.png')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <v-img :src="getThumbnailPngSrc('state_park_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
                         </div>
                     </v-btn>
                 </v-col>
@@ -78,15 +78,12 @@ import { inject } from 'vue';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 const route = useRoute();
 
 const imgWidth = ref(240);
 
 const btnHeight = ref(200);
-
-const display = useDisplay();
 
 const contentWindowHeight = inject(contentWindowHeightInjectKey) as ComputedRef<number>
 

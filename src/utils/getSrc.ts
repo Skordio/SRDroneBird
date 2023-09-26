@@ -16,6 +16,15 @@ export const getLogoSrc = ( name:string ) => {
     return (modules[path] as any).default
 }
 
+export const getMP4SrcNew = ( name:string ) => {
+   
+    const path = `/src/assets/videos/${name}/vid.mp4`
+    
+    const modules = import.meta.glob(`/src/assets/videos/**/*.mp4`, { eager: true }) 
+  
+    return (modules[path] as any).default
+}
+
 export const getMP4Src = ( name:string ) => {
    
     const path = `/src/assets/videos/${name}`
@@ -27,9 +36,9 @@ export const getMP4Src = ( name:string ) => {
 
 export const getThumbnailPngSrc = ( name:string ) => {
    
-    const path = `/src/assets/photos/thumbnails/${name}`
+    const path = `/src/assets/videos/${name}/th.png`
     
-    const modules = import.meta.glob('/src/assets/photos/thumbnails/*.png', { eager: true }) 
+    const modules = import.meta.glob(`/src/assets/videos/**/*.png`, { eager: true }) 
   
     return (modules[path] as any).default
 }

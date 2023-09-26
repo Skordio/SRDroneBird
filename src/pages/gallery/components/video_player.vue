@@ -1,14 +1,14 @@
 <template>
     <video :id="videoID" ref="videoRef" class="video-js rounded-xl flex-grow-0" :width="videoWidth" :height="videoHeight" controls
         data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
-        <source :src="getMP4Src(fileName)">
+        <source :src="getMP4SrcNew(name)">
     </video>
 </template>
   
 <script setup lang="ts">
 import { appBarHeightInjectKey, contentWindowHeightInjectKey } from "@/keys";
 import { GALLERY } from "@/route/names";
-import { getMP4Src } from "@/utils"
+import { getMP4Src, getMP4SrcNew } from "@/utils"
 import videojs from "video.js"
 import type Player from "video.js/dist/types/player";
 import type { Ref } from "vue";
@@ -24,10 +24,6 @@ const router = useRouter()
 
 const props = defineProps({
     name: {
-        type: String,
-        required: true
-    },
-    fileName: {
         type: String,
         required: true
     },

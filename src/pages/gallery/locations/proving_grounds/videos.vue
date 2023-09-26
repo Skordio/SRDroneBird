@@ -1,5 +1,5 @@
 <template>
-    <video-player name="proving_ground_1" file-name='SNW-Drone_Pine Groves__(10m).mp4' :next-route-name="GALLERY.STATE_PARK"/>
+    <video-player name="proving_ground_1" :next-route-name="GALLERY.STATE_PARK"/>
 </template>
 
 <script setup lang="ts">

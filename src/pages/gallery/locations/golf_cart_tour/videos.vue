@@ -1,5 +1,5 @@
 <template>
-    <video-player name="golf_course_1" file-name='golf cart tour___(12m)2.mp4' :next-route-name="GALLERY.GOLF_COURSE"/>
+    <video-player name="golf_course_1" :next-route-name="GALLERY.GOLF_COURSE"/>
 </template>
 
 <script setup lang="ts">
