@@ -1,7 +1,7 @@
 <template>
-    <video :id="videoID" ref="videoRef" class="video-js rounded-xl flex-grow-0" :width="videoWidth" :height="videoHeight" controls
+    <video :id="videoID" ref="videoRef" class="video-js rounded-xl flex-grow-0" :width="width" :height="height" controls
         data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
-        <source :src="getMP4SrcNew(name)">
+        <source :src="getMP4SrcNew(video)">
     </video>
 </template>
   
@@ -15,16 +15,25 @@ import type { Ref } from "vue";
 import type { ComputedRef } from "vue";
 import { onBeforeUnmount } from "vue";
 import { nextTick } from "vue";
+import { unref } from "vue";
 import { inject } from "vue";
-import { computed, defineProps, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 
 const router = useRouter()
 
 const props = defineProps({
-    name: {
+    video: {
         type: String,
+        required: true
+    },
+    width: {
+        type: Number,
+        required: true
+    },
+    height: {
+        type: Number,
         required: true
     },
     autoStart: {
@@ -37,21 +46,9 @@ const props = defineProps({
     }
 })
 
-const videoRef = ref(null)
+const videoRef = ref<HTMLElement>()
 
-const contentWindowHeight = inject(contentWindowHeightInjectKey) as ComputedRef<number>
-
-const display = useDisplay()
-
-const videoID = computed(() => `video-player-${props.name}`)
-
-const videoHeight = computed(() => contentWindowHeight.value - 60)
-
-const videoWidth = computed(() => getWidthForHeight(videoHeight.value))
-
-const getWidthForHeight = (height: number) => {
-    return height * (16 / 9)
-}
+const videoID = computed(() => `video-player-${props.video}`)
 
 const player: Ref<Player | undefined> = ref()
 
@@ -59,32 +56,37 @@ onMounted(() => {
     setTimeout(() => {
         player.value = videojs(videoID.value)
 
-        player.value.on('ended', function () {
-            if (props.nextRouteName) {
-                setTimeout(() => {
-                    router.push({name: GALLERY.MAIN}).then(() => {
-                        setTimeout(() => {
-                            router.push({name: props.nextRouteName})
-                        }, 400)
-                    })
-                }, 400)
-            }
-        });
-
         setTimeout(() => {
+            player.value?.on('ended', function () {
+                if (props.nextRouteName) {
+                    let nextRouteName = unref(props.nextRouteName)
+                    setTimeout(() => {
+                        if (player.value && !player.value.isDisposed_) {
+                            player.value.dispose()
+                        }
+                        videoRef.value?.remove()
+                        router.push({name: GALLERY.MAIN}).then(() => {
+                            setTimeout(() => {
+                                router.push({name: nextRouteName})
+                            }, 100)
+                        })
+                    }, 100)
+                }
+            });
+
             if (!player.value) return
             player.value.focus()
 
             if(!props.autoStart) return
             player.value.play()
-        }, 200)
-    }, 200);
+        }, 100)
+    }, 100);
 })
 
 onBeforeUnmount(() => {
     if (player.value && !player.value.isDisposed_) {
         player.value.dispose()
     }
-    ;(videoRef.value as any)?.remove()
+    videoRef.value?.remove()
 })
 </script>

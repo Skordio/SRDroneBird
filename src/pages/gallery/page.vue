@@ -11,39 +11,15 @@
             </v-col>
             <v-fade-transition mode="out-in">
                 <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
-                    <v-btn :to="{ name: GALLERY.LAKE }" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
+                    <v-btn v-for="video in videos" :to="{name:video.folder}" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
                         <div class="d-flex flex-column">
-                            <p>Lake</p>
-                            <v-img :src="getThumbnailPngSrc('lake_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
-                        </div>
-                    </v-btn>
-                    <v-btn :to="{ name: GALLERY.GOLF_CART_TOUR }" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
-                        <div class="d-flex flex-column">
-                            <p>Golf Cart Tour</p>
-                            <v-img :src="getThumbnailPngSrc('golf_cart_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
-                        </div>
-                    </v-btn>
-                    <v-btn :to="{ name: GALLERY.GOLF_COURSE }" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
-                        <div class="d-flex flex-column">
-                            <p>Golf Course</p>
-                            <v-img :src="getThumbnailPngSrc('golf_course_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
-                        </div>
-                    </v-btn>
-                    <v-btn :to="{ name: GALLERY.PROVING_GROUNDS }" color="#FFFFF" :height="btnHeight" class="video-card"  variant="outlined">
-                        <div class="d-flex flex-column">
-                            <p>Proving Grounds</p>
-                            <v-img :src="getThumbnailPngSrc('proving_grounds_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
-                        </div>
-                    </v-btn>
-                    <v-btn :to="{ name: GALLERY.STATE_PARK }" color="#FFFFF" :height="btnHeight" class="video-card"  variant="outlined">
-                        <div class="d-flex flex-column">
-                            <p>State Park</p>
-                            <v-img :src="getThumbnailPngSrc('state_park_1')" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <p>{{video.label}}</p>
+                            <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
                         </div>
                     </v-btn>
                 </v-col>
-                <v-col v-else cols="8" class="ms-auto d-flex" :style="{height: `${contentWindowHeight}px !important`}">
-                    <router-view   />
+                <v-col v-else-if="selectedVideo" cols="8" class="ms-auto d-flex" :style="{height: `${contentWindowHeight}px !important`}">
+                    <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight" :next-route-name="selectedVideo.next" />
                 </v-col>
             </v-fade-transition>
         </v-row>
@@ -72,12 +48,14 @@
 import { appBarHeightInjectKey, contentWindowHeightInjectKey } from '@/keys';
 import { GALLERY } from '@/route/names';
 import { getThumbnailPngSrc } from '@/utils';
-import type { Ref } from 'vue';
 import type { ComputedRef } from 'vue';
 import { inject } from 'vue';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import videos from '@/pages/gallery/videos';
+import { VideoPlayer } from './components';
+import { watch } from 'vue';
 
 const route = useRoute();
 
@@ -87,7 +65,26 @@ const btnHeight = ref(200);
 
 const contentWindowHeight = inject(contentWindowHeightInjectKey) as ComputedRef<number>
 
+const videoHeight = computed(() => contentWindowHeight.value - 60)
+
+const videoWidth = computed(() => getWidthForHeight(videoHeight.value))
+
+const getWidthForHeight = (height: number) => {
+    return height * (16 / 9)
+}
+
 const onGalleryHomeRoute = computed(() => {
     return route.name === GALLERY.MAIN;
 })
+
+const selectedVideo = ref<typeof videos[0] | null>(null)
+
+watch(() => route.name, (newVal) => {
+    let longVideo = videos.find((video) => video.folder === newVal)
+    if (longVideo) {
+        selectedVideo.value = longVideo
+    } else {
+        selectedVideo.value = null
+    }
+}, {immediate: true})
 </script>
