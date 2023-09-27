@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import { GALLERY } from "@/route/names";
 import { getMP4Src } from "@/utils"
+import { useLocalStorage } from "@vueuse/core";
 import videojs from "video.js"
 import type Player from "video.js/dist/types/player";
 import { onBeforeUnmount, watch, unref, computed, ref } from "vue";
@@ -43,6 +44,8 @@ const props = defineProps({
     }
 })
 
+const showVideo = ref(false)
+
 const videoRef = ref<HTMLElement>()
 
 const videoID = computed(() => `video-player-${props.video.replace(/\//g, "-")}`)
@@ -51,13 +54,17 @@ const videoSource = computed(() => getMP4Src(props.video))
 
 const player: Ref<Player | undefined> = ref()
 
+const volume = useLocalStorage("volume", 0.5)
+
 const dataSetup = `{"controls": true, "autoplay": ${props.autoPlay}, "preload": "auto"}`
 
 const setupPlayer = () => {
     player.value = videojs(videoID.value)
 
     setTimeout(() => {
-        player.value?.on('ended', function () {
+        if (!player.value) return
+
+        player.value.on('ended', function () {
             if (props.nextRouteName) {
                 let nextRouteName = unref(props.nextRouteName)
                 setTimeout(() => {
@@ -74,15 +81,24 @@ const setupPlayer = () => {
             }
         });
 
-        if (!player.value) return
+
+        player.value.on('volumechange', function () {
+            volume.value = player.value!.volume()
+        });
         player.value.focus()
+        player.value.volume(volume.value)
 
         if(!props.autoPlay) return
         player.value.play()
+        
+        setTimeout(() => {
+            showVideo.value = true
+        }, 100);
     }, 50)
 }
 
 watch(() => props.video, (newVal) => {
+    showVideo.value = false
     if (player.value && !player.value.isDisposed_) {
         player.value.dispose()
     }

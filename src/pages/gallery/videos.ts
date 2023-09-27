@@ -41,7 +41,7 @@ const videos = [
 		folder: 'high_flying_bird',
 		route: 'high_flying_bird',
 		label: 'High Flying Bird',
-		next: 'fly_like_an_eagle',
+		next: 'golf_cart_1',
 		shorts: [
 			{
 				folder: 'high_flying_bird/shorts/fly_like_an_eagle',

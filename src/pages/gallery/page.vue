@@ -8,6 +8,9 @@
                         <v-btn :to="{ name: GALLERY.MAIN }" exact>
                             Back
                         </v-btn>
+                        <v-btn @click="goToNext">
+                            Next
+                        </v-btn>
                         <v-fade-transition>
                             <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact>
                                 {{ `Back to ${selectedVideo.label}` }}
@@ -76,12 +79,14 @@ import type { ComputedRef } from 'vue';
 import { inject } from 'vue';
 import { computed } from 'vue';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { routerKey, useRoute, useRouter } from 'vue-router';
 import videos from '@/pages/gallery/videos';
 import { VideoPlayer, ShortCollection } from './components';
 import { watch } from 'vue';
 
 const route = useRoute();
+
+const router = useRouter();
 
 const imgWidth = ref(240);
 
@@ -102,6 +107,15 @@ const getWidthForHeight = (height: number) => {
 const onGalleryHomeRoute = computed(() => {
     return route.name === GALLERY.MAIN;
 })
+
+const goToNext = () => {
+    let next = selectedVideo.value?.next
+    router.push({name:GALLERY.MAIN}).then(() => {
+        setTimeout(() => {
+            router.push({ name: next })
+        }, 100);
+    })
+}
 
 const shortsTitle = ref("Shorts")
 
