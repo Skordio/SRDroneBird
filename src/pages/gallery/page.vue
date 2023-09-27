@@ -14,7 +14,7 @@
                             </v-btn>
                         </v-fade-transition>
                         <v-checkbox v-model="autoPlay" label="Auto Play" />
-                        <short-collection v-if="selectedVideo.shorts" :btn-height="btnHeight" :img-width="imgWidth"
+                        <short-collection v-if="selectedVideo.shorts" :title-text="shortsTitle" :btn-height="btnHeight" :img-width="imgWidth"
                             :shorts="selectedVideo.shorts"></short-collection>
                     </div>
                 </v-fade-transition>
@@ -38,7 +38,7 @@
                 <v-col v-else-if="selectedShort" cols="8" class="ms-auto d-flex"
                     :style="{ height: `${contentWindowHeight}px !important` }">
                     <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" />
+                        :auto-play="autoPlay" :next-route-name="selectedShort.next"  />
                 </v-col>
             </v-fade-transition>
         </v-row>
@@ -103,9 +103,11 @@ const onGalleryHomeRoute = computed(() => {
     return route.name === GALLERY.MAIN;
 })
 
+const shortsTitle = ref("Shorts")
+
 const selectedVideo = ref<typeof videos[0] | null>(null)
 
-const selectedShort = ref<{ folder: string, label: string } | undefined>(undefined)
+const selectedShort = ref<{ folder: string, label: string, next?: string } | undefined>(undefined)
 
 watch(() => route.name, (newVal) => {
     let longVideo = videos.find((video) => video.folder === newVal);
@@ -125,6 +127,11 @@ watch(() => route.name, (newVal) => {
     } else {
         selectedVideo.value = null
         selectedShort.value = undefined
+    }
+    if(newVal === 'high_flying_bird'){
+        shortsTitle.value = "Alternate Music"
+    } else {
+        shortsTitle.value = "Shorts"
     }
 }, { immediate: true })
 </script>

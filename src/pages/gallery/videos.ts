@@ -12,9 +12,10 @@ const videos = [
 		next: 'lake_1',
 		shorts: [
 			{
-				folder: 'golf_course_1/shorts/long_run',
-				route: 'shorts/long_run',
-				label: 'Long Run',
+				folder: 'golf_course_1/shorts/fairway',
+				route: 'shorts/fairway',
+				label: 'Fairway',
+				next: 'lake_1',
 			}
 		]
 	},
@@ -34,7 +35,21 @@ const videos = [
 		folder: 'state_park_1',
 		route: 'state_park_1',
 		label: 'State Park',
-		next: 'golf_cart_1',
+		next: 'high_flying_bird',
+	},
+	{
+		folder: 'high_flying_bird',
+		route: 'high_flying_bird',
+		label: 'High Flying Bird',
+		next: 'fly_like_an_eagle',
+		shorts: [
+			{
+				folder: 'high_flying_bird/shorts/fly_like_an_eagle',
+				route: 'shorts/fly_like_an_eagle',
+				label: 'Fly Like An Eagle',
+				next: 'golf_cart_1'
+			}
+		]
 	},
 ]
 

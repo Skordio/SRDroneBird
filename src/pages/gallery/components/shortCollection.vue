@@ -1,5 +1,5 @@
 <template>
-    <p class="text-h5">Shorts</p>
+    <p class="text-h5">{{ titleText }}</p>
     <div class="d-flex flex-column">
         <v-btn v-for="short in shorts" :to="{name:short.folder}" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
             <div class="d-flex flex-column">
@@ -38,6 +38,10 @@ const props = defineProps({
     btnHeight: {
         type: Number,
         required: true
+    },
+    titleText: {
+        type: String,
+        default: 'Shorts'
     }
 })
 </script>
