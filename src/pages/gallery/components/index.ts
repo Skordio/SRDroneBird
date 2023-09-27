@@ -1,3 +1,4 @@
-import VideoPlayer from "./video_player.vue"
+import VideoPlayer from "./videoPlayer.vue"
+import ShortCollection from "./shortCollection.vue"
 
-export { VideoPlayer }
+export { VideoPlayer, ShortCollection }

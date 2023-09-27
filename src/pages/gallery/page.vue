@@ -1,34 +1,53 @@
 <template>
-    <v-container fluid class="mx-8" :style="{height:`${contentWindowHeight}px !important`}">
+    <v-container fluid class="mx-8" :style="{ height: `${contentWindowHeight}px !important` }">
         <v-row class="d-flex h-100 align-start">
             <v-col cols="auto" class="d-flex flex-column">
                 <p class="text-h3">Gallery</p>
                 <v-fade-transition>
-                    <v-btn v-if="!onGalleryHomeRoute" :to="{name: GALLERY.MAIN}">
-                        Back
-                    </v-btn>
+                    <div v-if="selectedVideo" class="d-flex flex-column gap-3">
+                        <v-btn :to="{ name: GALLERY.MAIN }" exact>
+                            Back
+                        </v-btn>
+                        <v-fade-transition>
+                            <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact>
+                                {{ `Back to ${selectedVideo.label}` }}
+                            </v-btn>
+                        </v-fade-transition>
+                        <v-checkbox v-model="autoPlay" label="Auto Play" />
+                        <short-collection v-if="selectedVideo.shorts" :btn-height="btnHeight" :img-width="imgWidth"
+                            :shorts="selectedVideo.shorts"></short-collection>
+                    </div>
                 </v-fade-transition>
             </v-col>
             <v-fade-transition mode="out-in">
                 <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
-                    <v-btn v-for="video in videos" :to="{name:video.folder}" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
+                    <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
+                        class="video-card" variant="outlined">
                         <div class="d-flex flex-column">
-                            <p>{{video.label}}</p>
-                            <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9" class="rounded" />
+                            <p>{{ video.label }}</p>
+                            <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9"
+                                class="rounded" />
                         </div>
                     </v-btn>
                 </v-col>
-                <v-col v-else-if="selectedVideo" cols="8" class="ms-auto d-flex" :style="{height: `${contentWindowHeight}px !important`}">
-                    <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight" :next-route-name="selectedVideo.next" />
+                <v-col v-else-if="selectedVideo && !selectedShort" cols="8" class="ms-auto d-flex"
+                    :style="{ height: `${contentWindowHeight}px !important` }">
+                    <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
+                        :auto-play="autoPlay" :next-route-name="selectedVideo.next" />
+                </v-col>
+                <v-col v-else-if="selectedShort" cols="8" class="ms-auto d-flex"
+                    :style="{ height: `${contentWindowHeight}px !important` }">
+                    <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
+                        :auto-play="autoPlay" />
                 </v-col>
             </v-fade-transition>
         </v-row>
     </v-container>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .video-card {
-	background: rgba(0, 33, 61, 0.8) !important;
+    background: rgba(0, 33, 61, 0.8) !important;
 }
 
 .gallery-select {
@@ -42,10 +61,15 @@
     padding-top: 1%;
     padding-bottom: 1%;
 }
+
+.v-btn--active {
+    background-color: #2196f3 !important;
+    color: white !important;
+}
 </style>
 
 <script setup lang="ts">
-import { appBarHeightInjectKey, contentWindowHeightInjectKey } from '@/keys';
+import { contentWindowHeightInjectKey } from '@/keys';
 import { GALLERY } from '@/route/names';
 import { getThumbnailPngSrc } from '@/utils';
 import type { ComputedRef } from 'vue';
@@ -54,7 +78,7 @@ import { computed } from 'vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import videos from '@/pages/gallery/videos';
-import { VideoPlayer } from './components';
+import { VideoPlayer, ShortCollection } from './components';
 import { watch } from 'vue';
 
 const route = useRoute();
@@ -62,6 +86,8 @@ const route = useRoute();
 const imgWidth = ref(240);
 
 const btnHeight = ref(200);
+
+const autoPlay = ref(true)
 
 const contentWindowHeight = inject(contentWindowHeightInjectKey) as ComputedRef<number>
 
@@ -79,12 +105,26 @@ const onGalleryHomeRoute = computed(() => {
 
 const selectedVideo = ref<typeof videos[0] | null>(null)
 
+const selectedShort = ref<{ folder: string, label: string } | undefined>(undefined)
+
 watch(() => route.name, (newVal) => {
-    let longVideo = videos.find((video) => video.folder === newVal)
-    if (longVideo) {
+    let longVideo = videos.find((video) => video.folder === newVal);
+    let shortVideo;
+    videos.forEach(((video) => {
+        let foundVid = video.shorts?.find((short) => newVal === short.folder)
+        if (foundVid) {
+            shortVideo = foundVid
+        }
+    }));
+    if (longVideo && !shortVideo) {
         selectedVideo.value = longVideo
+        selectedShort.value = undefined
+    } else if (shortVideo) {
+        selectedShort.value = shortVideo
+        selectedVideo.value = videos.find((video) => video.shorts?.find((short) => newVal === short.folder)) ?? null
     } else {
         selectedVideo.value = null
+        selectedShort.value = undefined
     }
-}, {immediate: true})
+}, { immediate: true })
 </script>

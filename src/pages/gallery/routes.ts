@@ -7,8 +7,12 @@ const getChildren = () => {
 	const children = []
 	for (const video of videos) {
 		children.push({
-			path: video.folder,
+			path: video.route,
 			name: video.folder,
+			children: video.shorts?.map(short => ({
+				path: short.route,
+				name: short.folder,
+			})) || []
 		})
 	}
 	return children

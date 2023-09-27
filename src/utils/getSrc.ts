@@ -16,20 +16,10 @@ export const getLogoSrc = ( name:string ) => {
     return (modules[path] as any).default
 }
 
-export const getMP4SrcNew = ( name:string ) => {
-   
+export const getMP4Src = ( name:string ) => {
     const path = `/src/assets/videos/${name}/vid.mp4`
     
     const modules = import.meta.glob(`/src/assets/videos/**/*.mp4`, { eager: true }) 
-  
-    return (modules[path] as any).default
-}
-
-export const getMP4Src = ( name:string ) => {
-   
-    const path = `/src/assets/videos/${name}`
-    
-    const modules = import.meta.glob('/src/assets/videos/*.mp4', { eager: true }) 
   
     return (modules[path] as any).default
 }
