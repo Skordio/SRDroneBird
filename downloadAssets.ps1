@@ -1,6 +1,6 @@
 
 # Define the URL of the file and the path where it will be saved
-$url = "https://drive.google.com/uc?export=download&confirm=1&id=1BxYDMrDyrGWe1HDvO_Axm0fTXycBaquS"
+$url = "https://drive.google.com/uc?export=download&confirm=1&id=1xlplzxDIelxEyk8yW7Pw3yLS70p8MXce"
 $outputFilePath = ".\sr_dronebird_assets.zip"
 
 # Download the file
