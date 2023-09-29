@@ -11,6 +11,9 @@
                         <v-btn @click="goToNext">
                             Next
                         </v-btn>
+                        <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
+
+                        </v-select>
                         <v-fade-transition>
                             <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact>
                                 {{ `Back to ${selectedVideo.label}` }}
@@ -36,12 +39,12 @@
                 <v-col v-else-if="selectedVideo && !selectedShort" cols="8" class="ms-auto d-flex"
                     :style="{ height: `${contentWindowHeight}px !important` }">
                     <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" :next-route-name="selectedVideo.next" />
+                        :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" />
                 </v-col>
                 <v-col v-else-if="selectedShort" cols="8" class="ms-auto d-flex"
                     :style="{ height: `${contentWindowHeight}px !important` }">
                     <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" :next-route-name="selectedShort.next"  />
+                        :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
                 </v-col>
             </v-fade-transition>
         </v-row>
@@ -79,10 +82,12 @@ import type { ComputedRef } from 'vue';
 import { inject } from 'vue';
 import { computed } from 'vue';
 import { ref } from 'vue';
+import type { Quality } from "@/utils/getSrc"
 import { routerKey, useRoute, useRouter } from 'vue-router';
 import videos from '@/pages/gallery/videos';
 import { VideoPlayer, ShortCollection } from './components';
 import { watch } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
 
 const route = useRoute();
 
@@ -93,6 +98,8 @@ const imgWidth = ref(240);
 const btnHeight = ref(200);
 
 const autoPlay = ref(true)
+
+const quality = useLocalStorage<Quality>('quality', '1080p')
 
 const contentWindowHeight = inject(contentWindowHeightInjectKey) as ComputedRef<number>
 

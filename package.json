@@ -58,6 +58,7 @@
 		"prettier": "2.8.3",
 		"tslib": "^2.5.2",
 		"typescript": "^5.1.6",
+		"videojs-resolution-switcher": "^0.4.2",
 		"vite": "~2.9.9",
 		"vue-eslint-parser": "^9.1.0"
 	},
