@@ -1,7 +1,7 @@
 <template>
     <v-container fluid class="mx-8" :style="{ height: `${contentWindowHeight}px !important` }">
         <v-row class="d-flex h-100 align-start">
-            <v-col cols="auto" class="d-flex flex-column">
+            <v-col class="d-flex flex-column" cols="auto">
                 <p class="text-h3">Gallery</p>
                 <v-fade-transition>
                     <div v-if="selectedVideo" class="d-flex flex-column gap-3">
@@ -11,14 +11,14 @@
                         <v-btn @click="goToNext">
                             Next
                         </v-btn>
-                        <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
-
-                        </v-select>
                         <v-fade-transition>
                             <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact>
                                 {{ `Back to ${selectedVideo.label}` }}
                             </v-btn>
                         </v-fade-transition>
+                        <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
+
+                        </v-select>
                         <v-checkbox v-model="autoPlay" label="Auto Play" />
                         <short-collection v-if="selectedVideo.shorts" :title-text="shortsTitle" :btn-height="btnHeight" :img-width="imgWidth"
                             :shorts="selectedVideo.shorts"></short-collection>
@@ -36,12 +36,12 @@
                         </div>
                     </v-btn>
                 </v-col>
-                <v-col v-else-if="selectedVideo && !selectedShort" cols="8" class="ms-auto d-flex"
+                <v-col v-else-if="selectedVideo && !selectedShort" cols="8" class="d-flex overflow-hidden ms-auto"
                     :style="{ height: `${contentWindowHeight}px !important` }">
                     <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
                         :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" />
                 </v-col>
-                <v-col v-else-if="selectedShort" cols="8" class="ms-auto d-flex"
+                <v-col v-else-if="selectedShort" cols="8" class="d-flex overflow-hidden ms-auto"
                     :style="{ height: `${contentWindowHeight}px !important` }">
                     <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
                         :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />

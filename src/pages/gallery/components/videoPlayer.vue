@@ -1,8 +1,10 @@
 <template>
-    <video id="video" ref="videoRef" class="video-js rounded-xl flex-grow-0" :width="width" :height="height" controls
-        :data-setup="dataSetup">
-        <source :src="getMP4Src(video, quality)" />
-    </video>
+    <div v-if="showVideo" class="rounded-xl flex-shrink-1 w-100" :style="{width:width,height:height}">
+        <video id="video" ref="videoRef" class="video-js rounded-xl flex-grow-0 w-100" :width="width" :height="height" controls
+            :data-setup="dataSetup">
+            <source :src="getMP4Src(video, quality)" />
+        </video>
+    </div>
 </template>
   
 <script setup lang="ts">
@@ -17,8 +19,7 @@ import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import type { PropType } from "vue";
 import { nextTick } from "vue";
-
-
+import { onMounted } from "vue";
 
 const router = useRouter()
 
@@ -53,7 +54,7 @@ const props = defineProps({
     }
 })
 
-const showVideo = ref(false)
+const showVideo = ref(true)
 
 const videoRef = ref<HTMLElement>()
 
@@ -103,25 +104,25 @@ const setupPlayer = () => {
 
         if (!props.autoPlay) return
         player.value.play()
-
-        setTimeout(() => {
-            showVideo.value = true
-        }, 100);
     }, 50)
 }
 
 watch([() => props.video, () => props.quality], (newVal) => {
-    showVideo.value = false
     if (player.value && !player.value.isDisposed_) {
         player.value.dispose()
     }
+    showVideo.value = false
     nextTick(() => {
         showVideo.value = true
+        setTimeout(() => {
+            setupPlayer()
+        }, 100)
     })
-    setTimeout(() => {
-        setupPlayer()
-    }, 200)
-}, { immediate: true })
+})
+
+onMounted(() => {
+    setupPlayer()
+})
 
 onBeforeUnmount(() => {
     if (player.value && !player.value.isDisposed_) {
