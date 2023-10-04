@@ -19,7 +19,6 @@ export const getLogoSrc = ( name:string ) => {
 }
 
 export const getMP4Src = ( name:string, quality: Quality ) => {
-    console.log(name, quality)
     const path = `/src/assets/videos/${name}/${quality}.mp4`
     
     const modules = import.meta.glob(`/src/assets/videos/**/*.mp4`, { eager: true }) 

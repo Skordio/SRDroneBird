@@ -2,7 +2,7 @@ const videos = [
 	{
 		folder: 'golf_cart_1',
 		route: 'golf_cart_1',
-		label: 'Golf Cart',
+		label: 'Golf Cart Tour',
 		next: 'golf_course_1',
 	},
 	{

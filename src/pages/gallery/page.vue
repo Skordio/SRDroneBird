@@ -1,21 +1,26 @@
 <template>
     <v-container fluid class="mx-8" :style="{ height: `${contentWindowHeight}px !important` }">
         <v-row class="d-flex h-100 align-start">
-            <v-col class="d-flex flex-column" cols="auto">
+            <v-col class="d-flex flex-column h-100 overflow-y-auto" cols="4">
                 <p class="text-h3">Gallery</p>
                 <v-fade-transition>
-                    <div v-if="selectedVideo" class="d-flex flex-column gap-3">
-                        <v-btn :to="{ name: GALLERY.MAIN }" exact>
-                            Back
-                        </v-btn>
-                        <v-btn @click="goToNext">
-                            Next
-                        </v-btn>
-                        <v-fade-transition>
-                            <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact>
-                                {{ `Back to ${selectedVideo.label}` }}
+                    <div v-if="selectedVideo" class="d-flex flex-column gap-3 align-start">
+                        <div class="d-flex flex-column gap-2">
+                            <v-btn :to="{ name: GALLERY.MAIN }" exact block>
+                                Back to Gallery
                             </v-btn>
-                        </v-fade-transition>
+                            <v-btn :to="backRoute" exact block>
+                                Back
+                            </v-btn>
+                            <v-btn :to="{name:selectedVideo.next}" @click.stop="goToNext" block>
+                                Next
+                            </v-btn>
+                            <v-fade-transition>
+                                <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact block>
+                                    {{ `Back to ${selectedVideo.label}` }}
+                                </v-btn>
+                            </v-fade-transition>
+                        </div>
                         <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
 
                         </v-select>
@@ -37,14 +42,14 @@
                     </v-btn>
                 </v-col>
                 <v-col v-else-if="selectedVideo && !selectedShort" cols="8" class="d-flex overflow-hidden ms-auto"
-                    :style="{ height: `${contentWindowHeight}px !important` }">
+                    :style="{ maxHeight: `${contentWindowHeight}px !important` }">
                     <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" />
+                        :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }" />
                 </v-col>
                 <v-col v-else-if="selectedShort" cols="8" class="d-flex overflow-hidden ms-auto"
-                    :style="{ height: `${contentWindowHeight}px !important` }">
+                    :style="{ maxHeight: `${contentWindowHeight}px !important` }">
                     <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
+                        :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }"  />
                 </v-col>
             </v-fade-transition>
         </v-row>
@@ -93,6 +98,10 @@ const route = useRoute();
 
 const router = useRouter();
 
+const backRoute = computed(() => {
+    return { name: videos.find((video) => video.next === route.name)?.folder ?? GALLERY.MAIN }
+})
+
 const imgWidth = ref(240);
 
 const btnHeight = ref(200);
@@ -117,7 +126,7 @@ const onGalleryHomeRoute = computed(() => {
 
 const goToNext = () => {
     let next = selectedVideo.value?.next
-    router.push({name:GALLERY.MAIN}).then(() => {
+    router.replace({name:GALLERY.MAIN}).then(() => {
         setTimeout(() => {
             router.push({ name: next })
         }, 100);

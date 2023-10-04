@@ -18,7 +18,7 @@
 					</v-btn>
 				</div>
 			</v-app-bar>
-			<v-main :style="{ marginTop: `-${appBarHeight}px !important` }">
+			<v-main :style="vMainStyle">
 				<v-card color="#243860" class="h-screen d-flex justify-center">
 					<template #image>
 						<v-img id="bgd-img" :style="{ filter: `brightness(${brightness}%)` }" aspect-ratio="16/9" cover
@@ -46,11 +46,12 @@ import { defineComponent } from "vue"
 import { getLogoSrc, getPngSrc } from "@/utils"
 import { useRoute, useRouter } from "vue-router"
 import { HOME, GALLERY, ABOUT } from "@/route/names"
-import { until, useIntervalFn } from "@vueuse/core"
+import { until, useIntervalFn, watchDebounced } from "@vueuse/core"
 import { computed } from "vue"
 import { appBarHeightInjectKey, contentWindowHeightInjectKey } from "./keys"
 import { useDisplay } from "vuetify/lib/framework.mjs"
 import { provide } from "vue"
+import { unref } from "vue"
 
 const router = useRouter()
 
@@ -58,8 +59,34 @@ const display = useDisplay()
 
 const route = useRoute()
 
+// watch(() => display, (newVal) => {
+// 	let message = ''
+// 	for (const key in newVal as {[key:string]: any}) {
+// 		message += `${key}: ${unref(newVal[key])}\n`
+// 	}
+// 	console.log(message)
+// }, {immediate:true, deep: true})
+
+const logoHeightForBP = {
+	xs: 120,
+	sm: 120,
+	md: 120,
+	lg: 220,
+	xl: 220
+}
+
 const logoHeight = computed(() => {
-	return display.lgAndUp.value ? 220 : 120
+	if(display.xlAndUp.value) {
+		return logoHeightForBP.xl
+	} else if(display.lgAndUp.value) {
+		return logoHeightForBP.lg
+	} else if(display.mdAndUp.value) {
+		return logoHeightForBP.md
+	} else if(display.smAndUp.value) {
+		return logoHeightForBP.sm
+	} else {
+		return logoHeightForBP.xs
+	}
 })
 
 const appBarHeight = computed(() => {
@@ -68,6 +95,12 @@ const appBarHeight = computed(() => {
 
 const contentHeight = computed(() => {
 	return display.height.value - appBarHeight.value
+})
+
+const vMainStyle = computed(() => {
+	return {
+		marginTop: `-${appBarHeight.value}px !important`
+	}
 })
 
 provide(contentWindowHeightInjectKey, contentHeight)
@@ -92,7 +125,7 @@ const mapToRange = (value: number, inMin: number, inMax: number, outMin: number,
 	return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
 
-const brightness = ref(50)
+const brightness = ref(20)
 
 const changeBrightnessTo = (value: number) => {
 	if (value < brightness.value) {
@@ -114,13 +147,13 @@ const changeBrightnessTo = (value: number) => {
 	}
 }
 
-watch(route, (newVal) => {
+watchDebounced(route, (newVal) => {
 	if (newVal.path === '/') {
-		changeBrightnessTo(50)
+		changeBrightnessTo(60)
 	} else {
 		changeBrightnessTo(20)
 	}
-}, {immediate:true})
+}, {debounce: 50,immediate:true})
 
 </script>
 
