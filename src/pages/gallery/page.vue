@@ -1,58 +1,116 @@
 <template>
-    <v-container fluid class="mx-8" :style="{ height: `${contentWindowHeight}px !important` }">
-        <v-row class="d-flex h-100 align-start">
-            <v-col class="d-flex flex-column h-100 overflow-y-auto" cols="4">
-                <p class="text-h3">Gallery</p>
-                <v-fade-transition>
-                    <div v-if="selectedVideo" class="d-flex flex-column gap-3 align-start">
-                        <div class="d-flex flex-column gap-2">
-                            <v-btn :to="{ name: GALLERY.MAIN }" exact block>
-                                Back to Gallery
-                            </v-btn>
-                            <v-btn :to="backRoute" exact block>
-                                Back
-                            </v-btn>
-                            <v-btn :to="{name:selectedVideo.next}" @click.stop="goToNext" block>
-                                Next
-                            </v-btn>
-                            <v-fade-transition>
-                                <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact block>
-                                    {{ `Back to ${selectedVideo.label}` }}
+    <v-container fluid class="mx-8" :style="{ height: `${contentWindowHeight}px !important`, overflowY:'auto' }">
+        <template v-if="xs">
+            <v-row>
+                <v-col>
+                    <p class="text-h3">Gallery</p>
+                    <v-fade-transition>
+                        <div v-if="selectedVideo" class="d-flex flex-column gap-3 align-start">
+                            <div class="d-flex flex-column gap-2">
+                                <v-btn :to="{ name: GALLERY.MAIN }" exact block>
+                                    Back to Gallery
                                 </v-btn>
-                            </v-fade-transition>
-                        </div>
-                        <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
+                                <v-btn :to="backRoute" exact block>
+                                    Back
+                                </v-btn>
+                                <v-btn :to="{name:selectedVideo.next}" @click.stop="goToNext" block>
+                                    Next
+                                </v-btn>
+                                <v-fade-transition>
+                                    <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact block>
+                                        {{ `Back to ${selectedVideo.label}` }}
+                                    </v-btn>
+                                </v-fade-transition>
+                            </div>
+                            <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
 
-                        </v-select>
-                        <v-checkbox v-model="autoPlay" label="Auto Play" />
-                        <short-collection v-if="selectedVideo.shorts" :title-text="shortsTitle" :btn-height="btnHeight" :img-width="imgWidth"
-                            :shorts="selectedVideo.shorts"></short-collection>
-                    </div>
-                </v-fade-transition>
-            </v-col>
-            <v-fade-transition mode="out-in">
-                <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
-                    <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
-                        class="video-card" variant="outlined">
-                        <div class="d-flex flex-column">
-                            <p>{{ video.label }}</p>
-                            <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9"
-                                class="rounded" />
+                            </v-select>
+                            <v-checkbox v-model="autoPlay" label="Auto Play" />
+                            <short-collection v-if="selectedVideo.shorts" :title-text="shortsTitle" :btn-height="btnHeight" :img-width="imgWidth"
+                                :shorts="selectedVideo.shorts"></short-collection>
                         </div>
-                    </v-btn>
+                    </v-fade-transition>
                 </v-col>
-                <v-col v-else-if="selectedVideo && !selectedShort" cols="8" class="d-flex overflow-hidden ms-auto"
-                    :style="{ maxHeight: `${contentWindowHeight}px !important` }">
-                    <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }" />
+            </v-row>
+            <v-row>
+                <v-fade-transition mode="out-in">
+                    <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
+                        <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
+                            class="video-card" variant="outlined">
+                            <div class="d-flex flex-column">
+                                <p>{{ video.label }}</p>
+                                <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9"
+                                    class="rounded" />
+                            </div>
+                        </v-btn>
+                    </v-col>
+                    <v-col v-else-if="selectedVideo && !selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto">
+                        <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
+                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality"/>
+                    </v-col>
+                    <v-col v-else-if="selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
+                        >
+                        <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
+                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
+                    </v-col>
+                </v-fade-transition>
+            </v-row>
+        </template>
+        <template v-else>
+            <v-row class="d-flex h-100 align-start">
+                <v-col class="flex-grow-0 d-flex flex-column overflow-y-auto" cols="auto">
+                    <p class="text-h3">Gallery</p>
+                    <v-fade-transition>
+                        <div v-if="selectedVideo" class="d-flex flex-column gap-3 align-start">
+                            <div class="d-flex flex-column gap-2">
+                                <v-btn :to="{ name: GALLERY.MAIN }" exact block>
+                                    Back to Gallery
+                                </v-btn>
+                                <v-btn :to="backRoute" exact block>
+                                    Back
+                                </v-btn>
+                                <v-btn :to="{name:selectedVideo.next}" @click.stop="goToNext" block>
+                                    Next
+                                </v-btn>
+                                <v-fade-transition>
+                                    <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact block>
+                                        {{ `Back to ${selectedVideo.label}` }}
+                                    </v-btn>
+                                </v-fade-transition>
+                            </div>
+                            <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
+
+                            </v-select>
+                            <v-checkbox v-model="autoPlay" label="Auto Play" />
+                            <short-collection v-if="selectedVideo.shorts" :title-text="shortsTitle" :btn-height="btnHeight" :img-width="imgWidth"
+                                :shorts="selectedVideo.shorts"></short-collection>
+                        </div>
+                    </v-fade-transition>
                 </v-col>
-                <v-col v-else-if="selectedShort" cols="8" class="d-flex overflow-hidden ms-auto"
-                    :style="{ maxHeight: `${contentWindowHeight}px !important` }">
-                    <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
-                        :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }"  />
-                </v-col>
-            </v-fade-transition>
-        </v-row>
+                <v-fade-transition mode="out-in">
+                    <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
+                        <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
+                            class="video-card" variant="outlined">
+                            <div class="d-flex flex-column">
+                                <p>{{ video.label }}</p>
+                                <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9"
+                                    class="rounded" />
+                            </div>
+                        </v-btn>
+                    </v-col>
+                    <v-col v-else-if="selectedVideo && !selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
+                        :style="{ maxHeight: `${contentWindowHeight}px !important` }">
+                        <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
+                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }" />
+                    </v-col>
+                    <v-col v-else-if="selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
+                        :style="{ maxHeight: `${contentWindowHeight}px !important` }">
+                        <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
+                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }"  />
+                    </v-col>
+                </v-fade-transition>
+            </v-row>
+        </template>
     </v-container>
 </template>
 
@@ -93,6 +151,8 @@ import videos from '@/pages/gallery/videos';
 import { VideoPlayer, ShortCollection } from './components';
 import { watch } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
+import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { toRefs } from 'vue';
 
 const route = useRoute();
 
@@ -101,6 +161,9 @@ const router = useRouter();
 const backRoute = computed(() => {
     return { name: videos.find((video) => video.next === route.name)?.folder ?? GALLERY.MAIN }
 })
+
+const display = useDisplay()
+const { xs } = toRefs(display)
 
 const imgWidth = ref(240);
 

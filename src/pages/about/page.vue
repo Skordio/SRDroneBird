@@ -6,7 +6,7 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
                 <v-card class="about-card pa-3" elevation="10">
                     <p>
                         Hi, my name is Steven Wells.

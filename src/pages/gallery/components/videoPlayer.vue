@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showVideo" class="rounded-xl flex-shrink-1 w-100"
+    <div v-if="showVideo" class="rounded-xl flex-shrink-1 w-100 overflow-hidden"
         :style="{ width: width, height: height, maxHeight: `${contentWindowHeight}px !important` }">
         <video id="video" :poster="getThumbnailPngSrc(video)" ref="videoRef" class="video-js rounded-xl flex-grow-0 w-100" :width="width" :height="height"
             :style="{ maxHeight: `${contentWindowHeight}px !important` }" controls :data-setup="dataSetup">

@@ -2,21 +2,54 @@
 	<v-app>
 		<v-layout>
 			<v-app-bar :height="appBarHeight" class="app-bar">
-				<v-app-bar-title>
-					<v-img :src="getLogoSrc('dronebird_bird_filled_corrected.png')" :height="logoHeight" class="mb-n9" :style="{marginLeft:`-${logoMarginLeft}% !important`, marginRight:'-26% !important'}">
-					</v-img>
-				</v-app-bar-title>
-				<div class="d-flex gap-2" :style="{ marginRight: `${routingButtonsMarginRight}%` }">
-					<v-btn color="#FFFFF" :to="{ name: HOME.MAIN }" size="large">
-						Home
-					</v-btn>
-					<v-btn color="#FFFFF" :to="{ name: ABOUT.MAIN }" size="large">
-						About
-					</v-btn>
-					<v-btn color="#FFFFF" :to="{ name: GALLERY.MAIN }" size="large">
-						Gallery
-					</v-btn>
-				</div>
+				<v-container fluid class="pa-0 d-flex flex-column">
+				<template v-if="xs">
+					<v-row class="mt-n12">
+						<v-col class="mx-auto">
+							<v-img :src="getLogoSrc('dronebird_bird_filled_corrected.png')" height="131">
+							</v-img>
+						</v-col>
+					</v-row>
+					<v-row class="mt-3">
+						<v-col class="mx-auto mt-n15">
+							<div class="d-flex justify-center gap-2">
+								<v-btn color="#FFFFF" :to="{ name: HOME.MAIN }" size="large">
+									Home
+								</v-btn>
+								<v-btn color="#FFFFF" :to="{ name: ABOUT.MAIN }" size="large">
+									About
+								</v-btn>
+								<v-btn color="#FFFFF" :to="{ name: GALLERY.MAIN }" size="large">
+									Gallery
+								</v-btn>
+							</div>
+						</v-col>
+					</v-row>
+				</template>
+				<template v-else>
+					<v-row class="d-flex align-center">
+						<v-col class="me-auto d-flex justify-start">
+							<v-app-bar-title>
+								<v-img :src="getLogoSrc('dronebird_bird_filled_corrected.png')" :height="logoHeight" class="mb-n9"  :style="{marginLeft:`${logoMarginLeft}px !important`}"> 
+								</v-img>
+							</v-app-bar-title>
+						</v-col>
+						<v-col class="ms-auto">
+							<div class="d-flex gap-2" :style="{ marginRight: `${routingButtonsMarginRight}%` }">
+								<v-btn color="#FFFFF" :to="{ name: HOME.MAIN }" size="large">
+									Home
+								</v-btn>
+								<v-btn color="#FFFFF" :to="{ name: ABOUT.MAIN }" size="large">
+									About
+								</v-btn>
+								<v-btn color="#FFFFF" :to="{ name: GALLERY.MAIN }" size="large">
+									Gallery
+								</v-btn>
+							</div>
+						</v-col>
+					</v-row>
+				</template>
+				</v-container>
 			</v-app-bar>
 			<v-main :style="vMainStyle">
 				<v-card color="#243860" class="h-screen d-flex justify-center">
@@ -26,7 +59,7 @@
 						</v-img>
 					</template>
 					<v-fade-transition mode="out-in">
-						<router-view :style="{ marginTop: '140px !important', zIndex: '100 !important' }" />
+						<router-view :style="{ marginTop: `${appBarHeight}px !important`, zIndex: '100 !important' }" />
 					</v-fade-transition>
 				</v-card>
 			</v-main>
@@ -38,6 +71,10 @@
 .app-bar {
 	background: rgba(221, 44, 0, 0.2) !important;
 }
+// .v-toolbar__content {
+// 	display:flex;
+// 	flex-flow: column;
+// }
 </style>
 
 <script setup lang="ts">
@@ -52,17 +89,19 @@ import { appBarHeightInjectKey, contentWindowHeightInjectKey } from "./keys"
 import { useDisplay } from "vuetify/lib/framework.mjs"
 import { provide } from "vue"
 import { unref } from "vue"
+import { toRefs } from "vue"
 
 const router = useRouter()
 
 const display = useDisplay()
+const { xs } = toRefs(display)
 
 const route = useRoute()
 
 // watch(() => display, (newVal) => {
 // 	let message = ''
-// 	for (const key in newVal as {[key:string]: any}) {
-// 		message += `${key}: ${unref(newVal[key])}\n`
+// 	for (const key in newVal) {
+// 		message += `${key}: ${unref((newVal as any)[key])}\n`
 // 	}
 // 	console.log(message)
 // }, {immediate:true, deep: true})
@@ -74,6 +113,7 @@ const logoHeightForBP = {
 	lg: 220,
 	xl: 220
 }
+
 
 const logoHeight = computed(() => {
 	if(display.xlAndUp.value) {
@@ -90,7 +130,13 @@ const logoHeight = computed(() => {
 })
 
 const appBarHeight = computed(() => {
-	return display.lgAndUp.value ? 140 : 80
+	if(display.lgAndUp.value) {
+		return 140
+	} else if(display.smAndUp.value) {
+		return 80
+	} else {
+		return 140
+	}
 })
 
 const contentHeight = computed(() => {
@@ -107,9 +153,9 @@ provide(contentWindowHeightInjectKey, contentHeight)
 
 const logoMarginLeft = computed(() => {
 	if(display.lgAndUp.value) {
-		return parseInt(mapToRange(display.width.value, 600, 1920, 18, 31).toString()) 
+		return -100
 	} else {
-		return 26
+		return -30
 	}
 })
   
