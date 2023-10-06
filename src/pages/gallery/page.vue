@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid class="mx-8" :style="{ height: `${contentWindowHeight}px !important`, overflowY:'auto' }">
+    <v-container fluid class="mx-1 d-flex flex-column" :style="{ height: `${contentWindowHeight}px !important`, overflowY:'auto' }">
         <template v-if="xs">
-            <v-row>
+            <v-row class="flex-grow-0">
                 <v-col>
                     <p class="text-h3">Gallery</p>
                     <v-fade-transition>
@@ -32,7 +32,7 @@
                     </v-fade-transition>
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row class="flex-grow-0">
                 <v-fade-transition mode="out-in">
                     <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
                         <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
@@ -44,13 +44,13 @@
                             </div>
                         </v-btn>
                     </v-col>
-                    <v-col v-else-if="selectedVideo && !selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto">
-                        <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
+                    <v-col v-else-if="selectedVideo && !selectedShort" class="d-flex overflow-hidden ms-auto">
+                        <video-player :video="selectedVideo.folder"
                             :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality"/>
                     </v-col>
-                    <v-col v-else-if="selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
+                    <v-col v-else-if="selectedShort" class="d-flex overflow-hidden ms-auto"
                         >
-                        <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
+                        <video-player short :video="selectedShort.folder"
                             :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
                     </v-col>
                 </v-fade-transition>

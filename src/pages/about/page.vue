@@ -1,11 +1,11 @@
 <template>
-    <v-container fluid class="mx-8 text-body-1 d-flex flex-column overflow-y-auto">
-        <v-row class="d-flex align-center">
+    <v-container fluid class="mx-1 text-body-1 d-flex flex-column overflow-y-auto">
+        <v-row class="flex-grow-0 d-flex align-center">
             <v-col cols="auto">
                 <p class="text-h3">About</p>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="flex-grow-0 d-flex">
             <v-col cols="12" md="6">
                 <v-card class="about-card pa-3" elevation="10">
                     <p>
