@@ -45,12 +45,12 @@
                         </v-btn>
                     </v-col>
                     <v-col v-else-if="selectedVideo && !selectedShort" class="d-flex overflow-hidden ms-auto">
-                        <video-player :video="selectedVideo.folder"
+                        <video-player :video="selectedVideo.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
                             :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality"/>
                     </v-col>
                     <v-col v-else-if="selectedShort" class="d-flex overflow-hidden ms-auto"
                         >
-                        <video-player short :video="selectedShort.folder"
+                        <video-player short :video="selectedShort.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
                             :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
                     </v-col>
                 </v-fade-transition>
@@ -90,7 +90,7 @@
                 <v-fade-transition mode="out-in">
                     <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
                         <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
-                            class="video-card" variant="outlined">
+                            class="video-card elevation-15" variant="outlined">
                             <div class="d-flex flex-column">
                                 <p>{{ video.label }}</p>
                                 <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9"
@@ -99,14 +99,14 @@
                         </v-btn>
                     </v-col>
                     <v-col v-else-if="selectedVideo && !selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
-                        :style="{ maxHeight: `${contentWindowHeight}px !important` }">
-                        <video-player :video="selectedVideo.folder" :width="videoWidth" :height="videoHeight"
-                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }" />
+                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }">
+                        <video-player :video="selectedVideo.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
+                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" />
                     </v-col>
                     <v-col v-else-if="selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
-                        :style="{ maxHeight: `${contentWindowHeight}px !important` }">
-                        <video-player short :video="selectedShort.folder" :width="videoWidth" :height="videoHeight"
-                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" :style="{ maxHeight: `${contentWindowHeight}px !important` }"  />
+                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }">
+                        <video-player short :video="selectedShort.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
+                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" />
                     </v-col>
                 </v-fade-transition>
             </v-row>
@@ -162,6 +162,10 @@ const backRoute = computed(() => {
     return { name: videos.find((video) => video.next === route.name)?.folder ?? GALLERY.MAIN }
 })
 
+const fullscreen = ref(false)
+
+const currentTime = ref(0)
+
 const display = useDisplay()
 const { xs } = toRefs(display)
 
@@ -205,6 +209,7 @@ const selectedShort = ref<{ folder: string, label: string, next?: string } | und
 watch(() => route.name, (newVal) => {
     let longVideo = videos.find((video) => video.folder === newVal);
     let shortVideo;
+    currentTime.value = 0
     videos.forEach(((video) => {
         let foundVid = video.shorts?.find((short) => newVal === short.folder)
         if (foundVid) {

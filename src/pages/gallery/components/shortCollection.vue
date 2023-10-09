@@ -1,7 +1,7 @@
 <template>
     <p class="text-h5">{{ titleText }}</p>
     <div class="d-flex flex-column">
-        <v-btn v-for="short in shorts" :to="{name:short.folder}" color="#FFFFF" :height="btnHeight" class="video-card" variant="outlined">
+        <v-btn v-for="short in shorts" :to="{name:short.folder}" color="#FFFFF" :height="btnHeight" class="video-card elevation-15" variant="outlined">
             <div class="d-flex flex-column">
                 <p>{{short.label}}</p>
                 <v-img :src="getThumbnailPngSrc(short.folder)" :width="imgWidth" aspect-ratio="16/9" class="rounded" />

@@ -1,17 +1,16 @@
 <template>
-    <div v-if="showVideo" class="rounded-xl d-flex flex-shrink-1 w-100 overflow-hidden"
-        :style="{ width: width, height: height, maxHeight: `${contentWindowHeight}px !important` }">
-        <video id="video" :poster="getThumbnailPngSrc(video)" ref="videoRef" class="video-js rounded-xl flex-grow-0 w-100" :width="width" :height="height"
-            :style="{ maxHeight: `${contentWindowHeight}px !important` }" controls :data-setup="dataSetup">
+    <v-responsive class="rounded-xl overflow-hidden elevation-15" v-if="showVideo" :aspect-ratio="16/9">
+        <video id="video" :poster="getThumbnailPngSrc(video)" ref="videoRef" class="video-js rounded-xl h-100 w-100" 
+             controls :data-setup="dataSetup">
             <source :src="getMP4Src(video, quality)" />
         </video>
-    </div>
+    </v-responsive>
 </template>
   
 <script setup lang="ts">
 import { GALLERY } from "@/route/names";
 import { getMP4Src, getThumbnailPngSrc, type Quality } from "@/utils"
-import { unrefElement, useLocalStorage } from "@vueuse/core";
+import { unrefElement, useIntervalFn, useLocalStorage, useVModels } from "@vueuse/core";
 import videojs from "video.js"
 import type Player from "video.js/dist/types/player";
 import { inject, toRefs } from "vue";
@@ -31,14 +30,6 @@ const props = defineProps({
         type: String,
         required: true
     },
-    width: {
-        type: Number,
-        default: undefined
-    },
-    height: {
-        type: Number,
-        required: undefined
-    },
     autoPlay: {
         type: Boolean,
         default: true
@@ -54,8 +45,18 @@ const props = defineProps({
     quality: {
         type: Object as PropType<Quality>,
         default: "1080p"
+    },
+    fullscreen: {
+        type: Boolean,
+        default: false
+    },
+    currentTime: {
+        type: Number,
+        default: 0
     }
 })
+
+const { fullscreen, currentTime } = useVModels(props)
 
 const showVideo = ref(true)
 
@@ -73,6 +74,12 @@ const player: Ref<Player | undefined> = ref()
 const volume = useLocalStorage("volume", 0.5)
 
 const dataSetup = `{"controls": true, "autoplay": ${props.autoPlay}, "preload": "auto"}`
+
+const currentTimeFunc = useIntervalFn(() => {
+    currentTime.value = player.value?.currentTime() ?? 0
+}, 1000)
+
+currentTimeFunc.pause()
 
 const setupPlayer = () => {
     player.value = videojs(videoRef.value as Element, {
@@ -92,8 +99,16 @@ const setupPlayer = () => {
     setTimeout(() => {
         if (!player.value) return
         
+        if(fullscreen.value) {
+            player.value!.requestFullscreen()
+        }
+
+        player.value.on('fullscreenchange', function () {
+            fullscreen.value = player.value!.isFullscreen() ?? false
+        });
 
         player.value.on('ended', function () {
+            currentTimeFunc.pause()
             if (props.nextRouteName && props.autoPlay) {
                 let nextRouteName = unref(props.nextRouteName)
                 setTimeout(() => {
@@ -101,7 +116,7 @@ const setupPlayer = () => {
                         player.value.dispose()
                     }
                     videoRef.value?.remove()
-                    router.push({ name: GALLERY.MAIN }).then(() => {
+                    router.replace({ name: GALLERY.MAIN }).then(() => {
                         setTimeout(() => {
                             router.push({ name: nextRouteName })
                         }, 50)
@@ -119,6 +134,10 @@ const setupPlayer = () => {
 
         if (!props.autoPlay) return
         player.value.play()
+
+        player.value?.currentTime(currentTime.value)
+
+        currentTimeFunc.resume()
     }, 50)
 }
 
