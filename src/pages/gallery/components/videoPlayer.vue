@@ -13,15 +13,10 @@ import { getMP4Src, getThumbnailPngSrc, type Quality } from "@/utils"
 import { unrefElement, useIntervalFn, useLocalStorage, useVModels } from "@vueuse/core";
 import videojs from "video.js"
 import type Player from "video.js/dist/types/player";
-import { inject, toRefs } from "vue";
-import { onBeforeUnmount, watch, unref, computed, ref } from "vue";
-import type { Ref } from "vue";
+import { inject, toRefs, nextTick, onMounted, onBeforeUnmount, watch, unref, computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import type { PropType } from "vue";
-import { nextTick } from "vue";
-import { onMounted } from "vue";
 import { contentWindowHeightInjectKey } from "@/keys";
-import type { ComputedRef } from "vue";
+import type { ComputedRef, Ref, PropType } from "vue";
 
 const router = useRouter()
 
