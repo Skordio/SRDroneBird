@@ -1,8 +1,8 @@
 <template>
     <v-container fluid class="mx-1 d-flex flex-column" :style="{ height: `${contentWindowHeight}px !important`, overflowY:'auto' }">
-        <template v-if="xs">
+        <template>
             <v-row class="flex-grow-0">
-                <v-col>
+                <v-col :class="xs ? '' : 'flex-grow-0 d-flex flex-column overflow-y-auto'">
                     <p class="text-h3">Gallery</p>
                     <v-fade-transition>
                         <div v-if="selectedVideo" class="d-flex flex-column gap-3 align-start">
@@ -44,69 +44,15 @@
                             </div>
                         </v-btn>
                     </v-col>
-                    <v-col v-else-if="selectedVideo && !selectedShort" class="d-flex overflow-hidden ms-auto">
-                        <video-player :video="selectedVideo.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality"/>
-                    </v-col>
-                    <v-col v-else-if="selectedShort" class="d-flex overflow-hidden ms-auto"
-                        >
-                        <video-player short :video="selectedShort.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
-                    </v-col>
-                </v-fade-transition>
-            </v-row>
-        </template>
-        <template v-else>
-            <v-row class="d-flex h-100 align-start">
-                <v-col class="flex-grow-0 d-flex flex-column overflow-y-auto" cols="auto">
-                    <p class="text-h3">Gallery</p>
-                    <v-fade-transition>
-                        <div v-if="selectedVideo" class="d-flex flex-column gap-3 align-start">
-                            <div class="d-flex flex-column gap-2">
-                                <v-btn :to="{ name: GALLERY.MAIN }" exact block>
-                                    Back to Gallery
-                                </v-btn>
-                                <v-btn :to="backRoute" exact block>
-                                    Back
-                                </v-btn>
-                                <v-btn :to="{name:selectedVideo.next}" @click.stop="goToNext" block>
-                                    Next
-                                </v-btn>
-                                <v-fade-transition>
-                                    <v-btn v-if="selectedVideo && selectedShort" :to="{ name: selectedVideo.folder }" exact block>
-                                        {{ `Back to ${selectedVideo.label}` }}
-                                    </v-btn>
-                                </v-fade-transition>
-                            </div>
-                            <v-select label="Quality" :items="['480p', '720p', '1080p']" v-model="quality">
-
-                            </v-select>
-                            <v-checkbox v-model="autoPlay" label="Auto Play" />
-                            <short-collection v-if="selectedVideo.shorts" :title-text="shortsTitle" :btn-height="btnHeight" :img-width="imgWidth"
-                                :shorts="selectedVideo.shorts"></short-collection>
-                        </div>
-                    </v-fade-transition>
-                </v-col>
-                <v-fade-transition mode="out-in">
-                    <v-col v-if="onGalleryHomeRoute" class="ms-auto mt-auto gallery-select gap-3">
-                        <v-btn v-for="video in videos" :to="{ name: video.folder }" color="#FFFFF" :height="btnHeight"
-                            class="video-card elevation-15" variant="outlined">
-                            <div class="d-flex flex-column">
-                                <p>{{ video.label }}</p>
-                                <v-img :src="getThumbnailPngSrc(video.folder)" :width="imgWidth" aspect-ratio="16/9"
-                                    class="rounded" />
-                            </div>
-                        </v-btn>
-                    </v-col>
-                    <v-col v-else-if="selectedVideo && !selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
-                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }">
-                        <video-player :video="selectedVideo.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" />
-                    </v-col>
-                    <v-col v-else-if="selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
-                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }">
-                        <video-player short :video="selectedShort.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" />
+                    <v-col v-else-if="selectedVideo || selectedShort" class="d-flex overflow-hidden ms-auto"
+                    :style="xs ? '' : { maxHeight: `${contentWindowHeight-10}px !important` }">
+                        <video-player 
+                            :video="selectedShort?.folder ?? selectedVideo?.folder" 
+                            v-model:fullscreen="fullscreen" 
+                            v-model:current-time="currentTime"
+                            :auto-play="autoPlay" 
+                            :next-route-name="selectedShort?.next ?? selectedVideo?.next" 
+                            :quality="quality"/>
                     </v-col>
                 </v-fade-transition>
             </v-row>
@@ -207,8 +153,10 @@ const selectedVideo = ref<typeof videos[0] | null>(null)
 const selectedShort = ref<{ folder: string, label: string, next?: string } | undefined>(undefined)
 
 watch(() => route.name, (newVal) => {
+    selectedVideo.value = null
+    selectedShort.value = undefined
     let longVideo = videos.find((video) => video.folder === newVal);
-    let shortVideo;
+    let shortVideo:{ folder: string, label: string, next?: string };
     currentTime.value = 0
     videos.forEach(((video) => {
         let foundVid = video.shorts?.find((short) => newVal === short.folder)
@@ -216,16 +164,18 @@ watch(() => route.name, (newVal) => {
             shortVideo = foundVid
         }
     }));
-    if (longVideo && !shortVideo) {
-        selectedVideo.value = longVideo
-        selectedShort.value = undefined
-    } else if (shortVideo) {
-        selectedShort.value = shortVideo
-        selectedVideo.value = videos.find((video) => video.shorts?.find((short) => newVal === short.folder)) ?? null
-    } else {
-        selectedVideo.value = null
-        selectedShort.value = undefined
-    }
+    setTimeout(() => {
+        if (longVideo && !shortVideo) {
+            selectedVideo.value = longVideo
+            selectedShort.value = undefined
+        } else if (shortVideo) {
+            selectedShort.value = shortVideo
+            selectedVideo.value = videos.find((video) => video.shorts?.find((short) => newVal === short.folder)) ?? null
+        } else {
+            selectedVideo.value = null
+            selectedShort.value = undefined
+        }
+    }, 100);
     if(newVal === 'high_flying_bird'){
         shortsTitle.value = "Alternate Music"
     } else {
