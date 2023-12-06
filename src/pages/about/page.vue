@@ -48,6 +48,15 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-row>
+            <v-col cols="6">
+                <v-card class="about-card pa-3" elevation="10">
+                    <p>
+                        Note: I am currently in the process of obtaining my commercial drone license; I expect to have it around mid-spring 2024.  
+                    </p>
+                </v-card>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

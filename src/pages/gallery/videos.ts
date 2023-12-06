@@ -29,6 +29,18 @@ const videos = [
 		folder: 'proving_grounds_1',
 		route: 'proving_grounds_1',
 		label: 'Proving Grounds',
+		next: 'proving_grounds_2',
+	},
+	{
+		folder: 'proving_grounds_2',
+		route: 'proving_grounds_2',
+		label: 'Proving Grounds 2 w/ Racing Drone',
+		next: 'proving_grounds_3',
+	},
+	{
+		folder: 'proving_grounds_3',
+		route: 'proving_grounds_3',
+		label: 'Proving Grounds 3 w/ Racing Drone',
 		next: 'state_park_1',
 	},
 	{

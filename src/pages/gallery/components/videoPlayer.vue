@@ -38,7 +38,7 @@ const props = defineProps({
         default: false
     },
     quality: {
-        type: Object as PropType<Quality>,
+        type: String as PropType<Quality>,
         default: "1080p"
     },
     fullscreen: {
