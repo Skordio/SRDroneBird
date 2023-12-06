@@ -44,15 +44,10 @@
                             </div>
                         </v-btn>
                     </v-col>
-                    <v-col v-else-if="selectedVideo && !selectedShort" class="d-flex overflow-hidden ms-auto">
-                        <video-player :video="selectedVideo.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality"/>
-                    </v-col>
-                    <v-col v-else-if="selectedShort" class="d-flex overflow-hidden ms-auto"
-                        >
-                        <video-player short :video="selectedShort.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality"  />
-                    </v-col>
+                    <v-col v-else
+                        id="videoPlayerTeleport"
+                        class="d-flex overflow-hidden ms-auto"
+                    />
                 </v-fade-transition>
             </v-row>
         </template>
@@ -98,19 +93,25 @@
                             </div>
                         </v-btn>
                     </v-col>
-                    <v-col v-else-if="selectedVideo && !selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
-                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }">
-                        <video-player :video="selectedVideo.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedVideo.next" :quality="quality" />
-                    </v-col>
-                    <v-col v-else-if="selectedShort" class="flex-grow-1 d-flex overflow-hidden ms-auto"
-                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }">
-                        <video-player short :video="selectedShort.folder" v-model:fullscreen="fullscreen" v-model:current-time="currentTime"
-                            :auto-play="autoPlay" :next-route-name="selectedShort.next" :quality="quality" />
-                    </v-col>
+                    <v-col v-else
+                        id="videoPlayerTeleport"
+                        class="flex-grow-1 d-flex overflow-hidden ms-auto"
+                        :style="{ maxHeight: `${contentWindowHeight-10}px !important` }"
+                    />
                 </v-fade-transition>
             </v-row>
         </template>
+        <teleport v-if="!onGalleryHomeRoute && (selectedVideo || selectedShort)" to="#videoPlayerTeleport">
+            <video-player v-if="!onGalleryHomeRoute && (selectedVideo || selectedShort)"
+                :short="selectedShort ? true : false"
+                :video="selectedShort?.folder ?? selectedVideo?.folder ?? ''"
+                v-model:fullscreen="fullscreen"
+                v-model:current-time="currentTime"
+                :auto-play="autoPlay"
+                :next-route-name="selectedVideo?.next ?? selectedShort?.next ?? ''"
+                :quality="quality"
+            />
+        </teleport>
     </v-container>
 </template>
 
@@ -207,25 +208,35 @@ const selectedVideo = ref<typeof videos[0] | null>(null)
 const selectedShort = ref<{ folder: string, label: string, next?: string } | undefined>(undefined)
 
 watch(() => route.name, (newVal) => {
+    selectedVideo.value = null
+    selectedShort.value = undefined
+
     let longVideo = videos.find((video) => video.folder === newVal);
-    let shortVideo;
+
+    let shortVideo:{ folder: string, label: string, next?: string };
+
     currentTime.value = 0
+
     videos.forEach(((video) => {
         let foundVid = video.shorts?.find((short) => newVal === short.folder)
         if (foundVid) {
             shortVideo = foundVid
         }
     }));
-    if (longVideo && !shortVideo) {
-        selectedVideo.value = longVideo
-        selectedShort.value = undefined
-    } else if (shortVideo) {
-        selectedShort.value = shortVideo
-        selectedVideo.value = videos.find((video) => video.shorts?.find((short) => newVal === short.folder)) ?? null
-    } else {
-        selectedVideo.value = null
-        selectedShort.value = undefined
-    }
+
+    setTimeout(() => {
+        if (longVideo && !shortVideo) {
+            selectedVideo.value = longVideo
+            selectedShort.value = undefined
+        } else if (shortVideo) {
+            selectedShort.value = shortVideo
+            selectedVideo.value = videos.find((video) => video.shorts?.find((short) => newVal === short.folder)) ?? null
+        } else {
+            selectedVideo.value = null
+            selectedShort.value = undefined
+        }
+    }, 200);
+
     if(newVal === 'high_flying_bird'){
         shortsTitle.value = "Alternate Music"
     } else {
