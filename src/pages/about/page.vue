@@ -12,7 +12,7 @@
                         Hi, my name is Steven Wells.
                     </p>
                     <p>
-                        SR DroneBird is a drone photography and videography company I am trying to start - based near Scranton, Pennsylvania.
+                        SR DroneBird is a drone photography and videography company I am trying to start - based near Scranton, Pennsylvania. In fact, I am currently in the process of designing this website for the company!
                     </p>
                     <p>
                         I started flying drones about two years ago as just a personal hobby, and in the time since then it has become one of my favorite things to do.
