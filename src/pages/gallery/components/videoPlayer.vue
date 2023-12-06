@@ -66,7 +66,7 @@ const videoID = computed(() => `video-player-${props.video.replace(/\//g, "-")}`
 
 const player: Ref<Player | undefined> = ref()
 
-const volume = useLocalStorage("volume", 0.5)
+const volume = useLocalStorage("volume", 0.2)
 
 const dataSetup = `{"controls": true, "autoplay": ${props.autoPlay}, "preload": "auto"}`
 
