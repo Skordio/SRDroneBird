@@ -12,18 +12,22 @@
                         Hi, my name is Steven Wells.
                     </p>
                     <p>
-                        SR DroneBird is my drone photography and videography company based near Scranton, Pennsylvania.
+                        SR DroneBird is a drone photography and videography company I am trying to start - based near Scranton, Pennsylvania.
                     </p>
                     <p>
+                        I started flying drones about two years ago as just a personal hobby, and in the time since then it has become one of my favorite things to do.
+                        I love to fly my drones so much that I want to offer my services to anyone looking for a drone photographer or videographer, for any type of personal project or event.
+                        So, if you are looking for someone who can take drone footage, I would love to hear from you!
+                    </p>
+                    <!-- <p>
                         I have been flying drones for almost a year now as a personal hobby, and I am now looking to offer
                         my services as
                         a drone photographer. I am willing to do any job, ranging from weddings to real estate to personal
                         projects.
-                    </p>
+                    </p> -->
                     <p>
-                        From flying my drones recreationally I have amassed a large amount of footage, and from that I have
-                        edited several full cuts and short clips, which you can find on the gallery section of this website. 
-                        Most of the footage is taken near Lake Wallenpaupack in the Pocono Mountains of Pennsylvania.
+                        If you would like to check out some of my flying, head over to the gallery section of this website -
+                        there you can find several edited videos and short clips I've taken near Lake Wallenpaupack in the Pocono Mountains of Pennsylvania.
                     </p>
                 </v-card>
             </v-col>
