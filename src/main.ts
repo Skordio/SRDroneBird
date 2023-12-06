@@ -1,19 +1,18 @@
 import { createApp } from "vue"
 import App from "./App.vue"
 import { createPinia } from "pinia"
-import { createWebHashHistory, createRouter } from "vue-router"
+import { createWebHashHistory, createRouter, createWebHistory } from "vue-router"
 import type { RouterOptions } from "vue-router"
 
 //videojs
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-
+import routes from './route'
 // Router
-const routes = (await import("./route")).default as RouterOptions["routes"]
 const router = createRouter({
 	// 4. Provide the history implementation to use. We are using the hash history for simplicity here.
 	history: createWebHashHistory(),
-	routes: routes,
+	routes: routes as RouterOptions["routes"],
 })
 
 // Vuetify
