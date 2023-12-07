@@ -17,7 +17,7 @@
                     <p>
                         I started flying drones about two years ago as just a personal hobby, and in the time since then it has become one of my favorite things to do.
                         I love to fly my drones so much that I want to offer my services to anyone looking for a drone photographer or videographer, for any type of personal project or event.
-                        So, if you are looking for someone who can take drone footage, I would love to hear from you!
+                        So, if you are looking for someone who can take drone footage, I would love to hear from you! There will soon be a contact section of this website where you can reach out to me.
                     </p>
                     <!-- <p>
                         I have been flying drones for almost a year now as a personal hobby, and I am now looking to offer
