@@ -1,0 +1,1 @@
+simply place the start_dronebird_on_startup.bat script into C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp

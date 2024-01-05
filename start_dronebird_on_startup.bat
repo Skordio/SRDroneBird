@@ -1,2 +1,2 @@
-cd /d %CD% && pnpm run dev
+cd /d D:\Users\skord\Github\SRDroneBird && pnpm run dev
 pause
