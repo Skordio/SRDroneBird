@@ -178,11 +178,5 @@ watch(() => route.name, (newVal) => {
             selectedShort.value = undefined
         }
     }, 200);
-
-    if(newVal === 'high_flying_bird'){
-        shortsTitle.value = "Alternate Music"
-    } else {
-        shortsTitle.value = "Shorts"
-    }
 }, { immediate: true })
 </script>
