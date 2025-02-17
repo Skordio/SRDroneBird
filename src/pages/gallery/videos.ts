@@ -1,10 +1,10 @@
 const videos = [
-	{
-		folder: 'golf_cart_1',
-		route: 'golf_cart_1',
-		label: 'Golf Cart Tour',
-		next: 'golf_course_1',
-	},
+	// {
+	// 	folder: 'golf_cart_1',
+	// 	route: 'golf_cart_1',
+	// 	label: 'Golf Cart Tour',
+	// 	next: 'golf_course_1',
+	// },
 	{
 		folder: 'golf_course_1',
 		route: 'golf_course_1',
