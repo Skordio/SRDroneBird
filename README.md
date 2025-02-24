@@ -4,4 +4,18 @@ This is a website I am working on to host a side-business for FPV drone cinemati
 
 You can access the site at https://srdronebird.com/
 
-![example drone flying](demo/readme_demo_vid.gif)
+## Screenshots
+
+<div style="display:flex;justify-content:space-around;">
+
+![Site home page image](demo/site_home_downscaled.png)
+
+![Site gallery page image](demo/site_gallery_downscaled.png)
+
+</div>
+
+
+## Demo Vid
+
+![example drone flying gif](demo/readme_demo_vid.gif)
+
