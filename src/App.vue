@@ -81,59 +81,35 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue"
-import { defineComponent } from "vue"
 import { getLogoSrc, getPngSrc } from "@/utils"
 import { useRoute, useRouter } from "vue-router"
 import { HOME, GALLERY, ABOUT } from "@/route/names"
 import { until, useIntervalFn, watchDebounced } from "@vueuse/core"
 import { computed } from "vue"
 import { appBarHeightInjectKey, contentWindowHeightInjectKey } from "./keys"
-import { useDisplay } from "vuetify/lib/framework.mjs"
+import { useDisplay } from "vuetify"
 import { provide } from "vue"
-import { unref } from "vue"
-import { toRefs } from "vue"
 
-const router = useRouter()
-const display = useDisplay()
-const { xs } = toRefs(display)
+const { name, height, width, xs, lgAndUp, smAndUp } = useDisplay()
 
 const route = useRoute()
 
-// watch(() => display, (newVal) => {
-// 	let message = ''
-// 	for (const key in newVal) {
-// 		message += `${key}: ${unref((newVal as any)[key])}\n`
-// 	}
-// 	console.log(message)
-// }, {immediate:true, deep: true})
-
-const logoHeightForBP = {
-	xs: 120,
-	sm: 120,
-	md: 120,
-	lg: 220,
-	xl: 220
-}
-
-
 const logoHeight = computed(() => {
-	if (display.xlAndUp.value) {
-		return logoHeightForBP.xl
-	} else if (display.lgAndUp.value) {
-		return logoHeightForBP.lg
-	} else if (display.mdAndUp.value) {
-		return logoHeightForBP.md
-	} else if (display.smAndUp.value) {
-		return logoHeightForBP.sm
-	} else {
-		return logoHeightForBP.xs
+	switch (name.value) {
+		case 'xs': return 120
+		case 'sm': return 120
+		case 'md': return 120
+		case 'lg': return 220
+		case 'xl': return 220
+		case 'xxl': return 220
+		default: return 120
 	}
 })
 
 const appBarHeight = computed(() => {
-	if (display.lgAndUp.value) {
+	if (lgAndUp.value) {
 		return 140
-	} else if (display.smAndUp.value) {
+	} else if (smAndUp.value) {
 		return 80
 	} else {
 		return 140
@@ -141,7 +117,7 @@ const appBarHeight = computed(() => {
 })
 
 const contentHeight = computed(() => {
-	return display.height.value - appBarHeight.value
+	return height.value - appBarHeight.value
 })
 
 const vMainStyle = computed(() => {
@@ -153,7 +129,7 @@ const vMainStyle = computed(() => {
 provide(contentWindowHeightInjectKey, contentHeight)
 
 const logoMarginLeft = computed(() => {
-	if (display.lgAndUp.value) {
+	if (lgAndUp.value) {
 		return -100
 	} else {
 		return -30
@@ -161,8 +137,8 @@ const logoMarginLeft = computed(() => {
 })
   
 const routingButtonsMarginRight = computed(() => {
-	if(display.lgAndUp.value) {
-		return parseInt(mapToRange(display.width.value, 600, 1920, 5, 18).toString())
+	if(lgAndUp.value) {
+		return parseInt(mapToRange(width.value, 600, 1920, 5, 18).toString())
 	} else {
 		return 10
 	}
@@ -218,8 +194,5 @@ watchDebounced(route, (newVal) => {
 
 <style>
 @import "https://use.fontawesome.com/releases/v6.4.0/css/all.css";
-</style>
-
-<style lang="sass">
-@import "./native.sass"
+@import "bootstrap/dist/css/bootstrap.min.css";
 </style>

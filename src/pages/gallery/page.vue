@@ -95,27 +95,21 @@ import { VideoPlayer, ShortCollection } from './components';
 import { watch } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
-import { toRefs } from 'vue';
 
 const route = useRoute();
 
 const router = useRouter();
+
+const { xs } = useDisplay()
 
 const backRoute = computed(() => {
     return { name: videos.find((video) => video.next === route.name)?.folder ?? GALLERY.MAIN }
 })
 
 const fullscreen = ref(false)
-
 const currentTime = ref(0)
-
-const display = useDisplay()
-const { xs } = toRefs(display)
-
 const imgWidth = ref(240);
-
 const btnHeight = ref(200);
-
 const autoPlay = ref(true)
 
 const quality = useLocalStorage<Quality>('quality', '1080p')
@@ -123,7 +117,6 @@ const quality = useLocalStorage<Quality>('quality', '1080p')
 const contentWindowHeight = inject(contentWindowHeightInjectKey) as ComputedRef<number>
 
 const videoHeight = computed(() => contentWindowHeight.value - 60)
-
 const videoWidth = computed(() => getWidthForHeight(videoHeight.value))
 
 const getWidthForHeight = (height: number) => {
