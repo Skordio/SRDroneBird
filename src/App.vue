@@ -196,3 +196,9 @@ watchDebounced(route, (newVal) => {
 @import "https://use.fontawesome.com/releases/v6.4.0/css/all.css";
 @import "bootstrap/dist/css/bootstrap.min.css";
 </style>
+
+<style lang="scss">
+html, body {
+  overscroll-behavior: none;
+}
+</style>
