@@ -58,7 +58,7 @@
 							:src="getPngSrc('docks4.png')">
 						</v-img>
 					</template>
-					<router-view v-slot="{ Component }" :style="{ marginTop: `${appBarHeight}px !important`, zIndex: '100 !important' }" >
+					<router-view v-slot="{ Component }" :style="{ marginTop: `${appBarHeight}px !important`, zIndex: '100 !important', overflowX: 'hidden' }" >
 						<v-fade-transition mode="out-in">
 							<component :is="Component"/>
 						</v-fade-transition>
