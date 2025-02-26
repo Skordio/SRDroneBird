@@ -92,7 +92,6 @@ import { unref } from "vue"
 import { toRefs } from "vue"
 
 const router = useRouter()
-
 const display = useDisplay()
 const { xs } = toRefs(display)
 
@@ -116,13 +115,13 @@ const logoHeightForBP = {
 
 
 const logoHeight = computed(() => {
-	if(display.xlAndUp.value) {
+	if (display.xlAndUp.value) {
 		return logoHeightForBP.xl
-	} else if(display.lgAndUp.value) {
+	} else if (display.lgAndUp.value) {
 		return logoHeightForBP.lg
-	} else if(display.mdAndUp.value) {
+	} else if (display.mdAndUp.value) {
 		return logoHeightForBP.md
-	} else if(display.smAndUp.value) {
+	} else if (display.smAndUp.value) {
 		return logoHeightForBP.sm
 	} else {
 		return logoHeightForBP.xs
@@ -130,9 +129,9 @@ const logoHeight = computed(() => {
 })
 
 const appBarHeight = computed(() => {
-	if(display.lgAndUp.value) {
+	if (display.lgAndUp.value) {
 		return 140
-	} else if(display.smAndUp.value) {
+	} else if (display.smAndUp.value) {
 		return 80
 	} else {
 		return 140
@@ -152,7 +151,7 @@ const vMainStyle = computed(() => {
 provide(contentWindowHeightInjectKey, contentHeight)
 
 const logoMarginLeft = computed(() => {
-	if(display.lgAndUp.value) {
+	if (display.lgAndUp.value) {
 		return -100
 	} else {
 		return -30
@@ -171,21 +170,30 @@ const mapToRange = (value: number, inMin: number, inMax: number, outMin: number,
 	return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
 
-const brightness = ref(20)
+const brightness = ref(60)
+
+const desiredBrightness = ref(60)
+
+let pauseBrightnessChange: Function = () => { return; }
 
 const changeBrightnessTo = (value: number) => {
+	desiredBrightness.value = value
 	if (value < brightness.value) {
 		const { pause } = useIntervalFn(() => {
-			brightness.value--
-		}, 10)
+			brightness.value -= 2
+		}, 20)
+
+		pauseBrightnessChange = pause
 
 		until(computed(() => brightness.value <= value)).toBe(true).then(() => {
 			pause()
 		})
 	} else if (brightness.value < value) {
 		const { pause } = useIntervalFn(() => {
-			brightness.value++
-		}, 10)
+			brightness.value += 2
+		}, 20)
+
+		pauseBrightnessChange = pause
 
 		until(computed(() => brightness.value >= value)).toBe(true).then(() => {
 			pause()
@@ -195,11 +203,14 @@ const changeBrightnessTo = (value: number) => {
 
 watchDebounced(route, (newVal) => {
 	if (newVal.path === '/') {
+		pauseBrightnessChange()
 		changeBrightnessTo(60)
 	} else {
+		pauseBrightnessChange()
 		changeBrightnessTo(20)
 	}
-}, {debounce: 50,immediate:true})
+}, { immediate: true, debounce: 50 })
+
 
 </script>
 
