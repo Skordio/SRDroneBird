@@ -107,12 +107,14 @@ const logoHeight = computed(() => {
 })
 
 const appBarHeight = computed(() => {
-	if (lgAndUp.value) {
-		return 140
-	} else if (smAndUp.value) {
-		return 80
-	} else {
-		return 140
+	switch (name.value) {
+		case 'xs': return 140
+		case 'sm': return 80
+		case 'md': return 80
+		case 'lg': return 140
+		case 'xl': return 140
+		case 'xxl': return 140
+		default: return 140
 	}
 })
 
@@ -120,13 +122,13 @@ const contentHeight = computed(() => {
 	return height.value - appBarHeight.value
 })
 
+provide(contentWindowHeightInjectKey, contentHeight)
+
 const vMainStyle = computed(() => {
 	return {
 		marginTop: `-${appBarHeight.value}px !important`
 	}
 })
-
-provide(contentWindowHeightInjectKey, contentHeight)
 
 const logoMarginLeft = computed(() => {
 	if (lgAndUp.value) {
