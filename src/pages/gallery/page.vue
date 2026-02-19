@@ -94,7 +94,7 @@ import videos from '@/pages/gallery/videos';
 import { VideoPlayer, ShortCollection } from './components';
 import { watch } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
-import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { useDisplay } from 'vuetify'
 
 const route = useRoute();
 
