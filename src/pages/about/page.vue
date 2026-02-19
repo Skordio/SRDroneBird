@@ -15,7 +15,7 @@
                         SR DroneBird is my drone photography and videography company based in the Pocono Mountains, half an hour from Scranton.
                     </p>
                     <p>
-                        I have been flying drones for three years as a personal hobby, and I am now looking to offer
+                        I have been flying drones for three years as a personal hobby, and I am hoping to soon offer
                         my services as a drone videographer.
                     </p> 
                     <p>
